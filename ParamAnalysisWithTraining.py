@@ -1,5 +1,5 @@
 """
-    Parameters(alpha,beta) analysis based on SGC model
+   Get different training results (accuracies) using filter matrix
 """
 import os
 
@@ -133,29 +133,29 @@ torch.manual_seed(s)
 torch.cuda.manual_seed(s)
 torch.cuda.manual_seed_all(s)
 
-# load message reinforcement matrix
-dir = 'ParWalksEnhancedMatrix/'
+# load filter matrix
+dir = 'FilterMatrix/'
 suffix = '.npz'
 
 # beta_list
 beta_list = [0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.20]
-# alpha_list
+# upper_percent_list
 upper_percent_list = [99.9, 99.8, 99.7, 99.6, 99.5, 99.4, 99.3, 99.2, 99.1, 99.0]
 
-# parwalks enhanced matrix
+# parwalks filter matrix
 res_list = []
 for i in range(len(upper_percent_list)):
     upper_percent = upper_percent_list[i]
     for j in range(len(beta_list)):
         print('------------------------------------')
         beta = beta_list[j]
-        filename = 'parwalks_enhanced_upper_percent_' + str(upper_percent) + '%_beta_' + str(beta)
-        parwalks_enhanced_matrix = load_sparse_matrix(dir + filename + suffix)
-        parwalks_enhanced_matrix = scipy_sparse_mat_to_torch_sparse_tensor(parwalks_enhanced_matrix)
-        parwalks_enhanced_matrix = parwalks_enhanced_matrix.to(device)
+        filename = 'parwalks_filter_matrix_upper_percent_' + str(upper_percent) + '%_beta_' + str(beta)
+        parwalks_filter_matrix = load_sparse_matrix(dir + filename + suffix)
+        parwalks_filter_matrix = scipy_sparse_mat_to_torch_sparse_tensor(parwalks_filter_matrix)
+        parwalks_filter_matrix = parwalks_filter_matrix.to(device)
         data = {
             'X_original': (features, adj, None),
-            'X_parwalks': (features, adj, parwalks_enhanced_matrix),
+            'X_parwalks': (features, adj, parwalks_filter_matrix),
             'y': labels_cuda
         }
         dropout = 0.0
@@ -174,8 +174,8 @@ for i in range(len(upper_percent_list)):
         print(s)
         print('------------------------------------')
 print('Training Over')
-# save alpha-beta-accuracy list
-with open('alpha_beta_accuracy.txt', 'w') as f:
+# save Param_accuracy list
+with open('Param_accuracy.txt', 'w') as f:
     f.write(' '.join(res_list))
 
 print(res_list)

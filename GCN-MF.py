@@ -1,5 +1,5 @@
 """
-    Training GCN,GCN-MF model
+    Training GCN and GCN-MF model
 """
 import numpy as np
 import torch
@@ -98,6 +98,7 @@ def scipy_sparse_mat_to_torch_sparse_tensor(sparse_mx):
 
 
 # prepare data
+
 dataset_str = 'cora'
 # dataset_str = 'citeseer'
 device = torch.device('cpu')
@@ -107,22 +108,22 @@ features = preprocess_features(features)  # [49216, 2], [49216], [2708, 1433]
 labels_cuda = torch.from_numpy(labels.argmax(axis=1)).long().to(device)
 labels_cpu = torch.from_numpy(labels.argmax(axis=1)).long()
 
-# parwalks_enhanced_matrix
+# filter matrix
 
-dir = 'ParWalksEnhancedMatrix/' + dataset_str + '/'
+dir = 'FilterMatrix/' + dataset_str + '/'
 upper_percent = 99
 beta = 0.1
 suffix = '.npz'
 
-# parwalks enhanced matrix
-filename = 'parwalks_enhanced_upper_percent_' + str(upper_percent) + '%_beta_' + str(beta)
-parwalks_enhanced_matrix = load_sparse_matrix(dir + filename + suffix)
-parwalks_enhanced_matrix = scipy_sparse_mat_to_torch_sparse_tensor(parwalks_enhanced_matrix)
-parwalks_enhanced_matrix = parwalks_enhanced_matrix.to(device)
+# filter matrix based on the random walking model ParWalks
+filename = 'parwalks_filter_matrix_upper_percent_' + str(upper_percent) + '%_beta_' + str(beta)
+parwalks_filter_matrix = load_sparse_matrix(dir + filename + suffix)
+parwalks_filter_matrix = scipy_sparse_mat_to_torch_sparse_tensor(parwalks_filter_matrix)
+parwalks_filter_matrix = parwalks_filter_matrix.to(device)
 
 data = {
     'X_original': (features, adj, None),
-    'X_parwalks': (features, adj, parwalks_enhanced_matrix),
+    'X_parwalks': (features, adj, parwalks_filter_matrix),
     'y': labels_cuda
 }
 

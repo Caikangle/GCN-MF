@@ -1,5 +1,5 @@
 """
-    Obtain the probability matrix based on ParkWalks
+    Get the probability matrix based on ParkWalks
 """
 import os
 

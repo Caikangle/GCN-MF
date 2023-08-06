@@ -14,15 +14,15 @@ def getCentileValue(probs, upper_percent=90):
     return upper_bound_value
 
 
-# get the message reinforcement matrix
-def getEnhancedMatrix(probs, upper_percent=90, beta=0.1):
+# get the filter matrix
+def getFilterMatrix(probs, upper_percent=90, beta=0.1):
     upper_bound_value = getCentileValue(probs, upper_percent)
-    mask = sp.csr_matrix(np.zeros((probs.shape[0], probs.shape[1])))
+    filter_matrix = sp.csr_matrix(np.zeros((probs.shape[0], probs.shape[1])))
     for i in range(probs.shape[0]):
         for j in range(i + 1, probs.shape[0]):
             if probs[i, j] >= upper_bound_value:
-                mask[i, i] = 1 - beta
-                mask[i, j] = beta
-                mask[j, j] = 1 - beta
-                mask[j, i] = beta
-    return mask
+                filter_matrix[i, i] = 1 - beta
+                filter_matrix[i, j] = beta
+                filter_matrix[j, j] = 1 - beta
+                filter_matrix[j, i] = beta
+    return filter_matrix

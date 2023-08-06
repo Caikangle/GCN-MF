@@ -1,19 +1,19 @@
 """
-    plot alpha-beta-accuracy 3d picture
+    Plot a 3d figure to reveal the influences of filter parameters on classification accuracy
 """
 import numpy as np
 from matplotlib import pyplot as plt
 
-# load alpha-beta-accuracy list
+# load Param_accuracy.txt
 res = ''
-with open('alpha_beta_accuracy.txt', 'r') as f:
+with open('Param_accuracy.txt', 'r') as f:
     res = f.read()
 
 res_list = res.split(' ')
 
 # the range of the parameter beta
 beta_list = [0.02, 0.04, 0.06, 0.08, 0.1, 0.12, 0.14, 0.16, 0.18, 0.20]
-# the range of the parameter alpha
+# the range of the parameter upper_percent
 upper_percent_list = [99.9, 99.8, 99.7, 99.6, 99.5, 99.4, 99.3, 99.2, 99.1, 99.0]
 
 res1 = []

@@ -58,7 +58,7 @@ class SimpleGCN(nn.Module):
         layerwise_feat_list = []
         for i in range(self.n_layer):
             X = torch.sparse.mm(A, X)
-            # enhanced_message_matrix plays a role in middle layers
+            # filter matrix plays a role in middle layers
             if enhanced_message_matrix is not None and i != 0 and i != self.n_layer - 1:
                 X = torch.sparse.mm(enhanced_message_matrix, X)
             layerwise_feat_list.append(X)
